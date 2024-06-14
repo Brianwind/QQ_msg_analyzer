@@ -34,14 +34,14 @@ activities = [0 for i in range(30-len(activities)%30)] + activities
 
 activities = np.array(activities).reshape(-1,30)
 output_list.append('从上到下，从左到右，颜色越深表示消息越多，一格代表一天，一行表示30天\n\n')
-plt.figure(figsize=(20,24))
+plt.figure(figsize=(20,1+round(len(activities)/1.54)))
 plt.pcolormesh(np.log(activities[::-1,:]+1),cmap='Greens',edgecolors='w',linewidth=1.5)
 plt.axis('off')
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 plt.rcParams['font.size'] = 24
 plt.title(f'从 {dates.min()} 到 {dates.max()}')
-plt.savefig('output\\activity.png',bbox_inches='tight')
+plt.savefig('output\\activity.png')
 output_list.append('![活动图](activity.png)\n\n')
 
 max_activity_date = dates.groupby(dates).size().reindex(pd.date_range(dates.min(), dates.max(), freq='D')).fillna(0).astype(int).idxmax()
@@ -66,9 +66,17 @@ x = np.arange(len(data_types))
 fig, ax = plt.subplots(figsize=(26,10),layout='constrained')
 colors = ['#8ECFC9','#FFBE7A',"#FA7F6F","#82B0D2"]
 
+max_msg_count = max([i[0] for i in msg_stats.values()])
+max_char_count = max([i[1] for i in msg_stats.values()])
+max_emj_count = max([i[2] for i in msg_stats.values()])
+max_img_count = max([i[3] for i in msg_stats.values()])
+max_avg_char = max([i[4] for i in msg_stats.values()])
+
+scaler = max(max_msg_count,max_char_count,max_emj_count,max_img_count,max_avg_char)
+
 for data_type, data in msg_stats.items():
     offset = width*index
-    bar = ax.bar(x+offset,data*np.array([10,1,100,100,8000]),width,label=data_type,color=colors[index])
+    bar = ax.bar(x+offset,data*(scaler/np.array([max_msg_count,max_char_count,max_emj_count,max_img_count,max_avg_char])),width,label=data_type,color=colors[index])
     ax.bar_label(bar,labels=[f'{i:.0f}' for i in data],padding=3)
     index += 1
 
@@ -113,7 +121,7 @@ for i in df['sender'].unique():
 
 if os.path.exists('output\\output.md'):
     print('output.md exists, deleting...')
-    os.remove('output.md')
+    os.remove('output\\output.md')
 
 with open('output\\output.md','w',encoding='utf-8') as f:
     f.write('\n'.join(output_list))

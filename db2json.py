@@ -26,7 +26,7 @@ del rows
 df = df[df['40030'] == group_id]
 
 
-df['40033'] = df['40033'].astype(int).astype(str) # qq number
+df['40033'] = df['40033'].astype('int64').astype(str) # qq number
 
 
 def parsed_to_text(parsed):
@@ -37,10 +37,14 @@ def parsed_to_text(parsed):
         for i in parsed:
             message_type = i['45002']
             if message_type == 1:
-                if type(i['45101']) == dict:
-                    pass
-                else:
+                if '45101' in i.keys():
+                    if type(i['45101']) == dict:
+                        continue
                     parsed_text += i['45101']
+                elif '45101-2' in i.keys():
+                    if type(i['45101-2']) == dict:
+                        continue
+                    parsed_text += i['45101-2']
             elif message_type == 2:
                 parsed_text += "--某张图片--"
             elif message_type == 3:
