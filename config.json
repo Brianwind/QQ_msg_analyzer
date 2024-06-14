@@ -1,0 +1,10 @@
+{
+    "db_path": "input\\plaintext.db",
+    "group_id": 123456,
+    "nicknames" : {
+        "qq号1": "昵称1",
+        "qq号2": "昵称2",
+        "qq号3": "昵称3"
+    },
+    "exclude_word": ["屏蔽词1", "屏蔽词2"]
+}
