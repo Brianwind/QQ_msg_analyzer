@@ -1,0 +1,4 @@
+pandas
+bbpb
+jieba
+wordcloud

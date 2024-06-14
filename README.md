@@ -1,10 +1,28 @@
 # QQ聊天记录统计分析
 
+## 使用
 
+### 生成明文数据库
+
+这里默认你已经获得了QQNT的数据库文件和key，如果没有请参考：
+
+- Windows：[这里](https://github.com/Mythologyli/qq-nt-db)
+- 其他：[这里](https://github.com/QQBackup/qq-win-db-key)
+
+在Windows下，先下载MSYS2，然后打开MSYS2 Mingw64终端，使用如下命令获得明文数据库：
 
 ```sh
 tail -c +1025 nt_msg.db > nt_msg.clean.db
 ```
+
+在MSYS2 Mingw64终端下，安装[sqlcipher](https://packages.msys2.org/package/mingw-w64-x86_64-sqlcipher?repo=mingw64)
+
+然后运行：
+```sh
+sqlcipher
+```
+
+执行如下指令，其中pass是你获得的16位字符key：
 
 ```sql
 .open nt_msg.clean.db
@@ -15,6 +33,23 @@ DETACH DATABASE plaintext;
 .exit
 ```
 
+### 生成统计数据
+
+将上一步生成的plaintext.db文件放到本目录下`input`文件夹，然后编辑`config.json`文件，填写明文数据库路径、需要分析的群号、群成员的昵称字典、以及生成词云时需要排除的词。
+
+然后安装依赖
+```sh
+pip install -r requirements.txt
+```
+
+运行：
+
+```sh
+python db2json.py
+python json2statistics.py
+```
+
+生成的结果在`output`文件夹下，点开`output.md`即可查看。
 
 ## Protobuf表头
 
