@@ -9,7 +9,7 @@
 - Windows：[这里](https://github.com/Mythologyli/qq-nt-db)
 - 其他：[这里](https://github.com/QQBackup/qq-win-db-key)
 
-在Windows下，先下载MSYS2，然后打开MSYS2 Mingw64终端，使用如下命令获得明文数据库：
+在Windows下，先下载MSYS2，然后打开MSYS2 Mingw64终端，使用如下命令去除 QQNT 添加的文件头：
 
 ```sh
 tail -c +1025 nt_msg.db > nt_msg.clean.db
@@ -32,6 +32,8 @@ SELECT sqlcipher_export('plaintext');
 DETACH DATABASE plaintext;
 .exit
 ```
+
+这一步将明文数据库保存为了`plaintext.db`
 
 ### 生成统计数据
 
